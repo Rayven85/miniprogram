@@ -1,6 +1,5 @@
 import { ENV_ID } from "../../env";
-import { fenToYuan } from "../../utils/money";
-console.log("test money:", fenToYuan(1290));
+
 const db = wx.cloud.database({ env: ENV_ID });
 
 Page({
