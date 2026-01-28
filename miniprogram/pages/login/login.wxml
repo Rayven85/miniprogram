@@ -1,0 +1,20 @@
+<view class="box">
+  <view class="title">完善信息后才能下单</view>
+
+  <view class="field">
+    <text>姓名</text>
+    <input placeholder="请输入真实姓名" value="{{form.name}}" bindinput="onName"/>
+  </view>
+
+  <view class="field">
+    <text>微信名</text>
+    <input placeholder="例如：Rae / 张三" value="{{form.wechatName}}" bindinput="onWechatName"/>
+  </view>
+
+  <view class="field">
+    <text>电话</text>
+    <input placeholder="手机号" value="{{form.phone}}" bindinput="onPhone" type="number"/>
+  </view>
+
+  <button type="primary" bindtap="onSave">保存并进入菜单</button>
+</view>

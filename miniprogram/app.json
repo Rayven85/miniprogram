@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/menu/menu",
+    "pages/item/item",
+    "pages/cart/cart",
+    "pages/checkout/checkout",
+    "pages/orders/orders",
+    "pages/admin/admin"
+  ],
+  "window": {
+    "navigationBarTitleText": "点餐"
+  }
+}

@@ -1,0 +1,5 @@
+<!--pages/menu/menu.wxml-->
+<view style="padding: 24rpx;">
+  <view style="font-size: 34rpx; font-weight: 600;">菜单页</view>
+  <view style="margin-top: 16rpx;">如果你能看到这行字，说明页面渲染正常 ✅</view>
+</view>
