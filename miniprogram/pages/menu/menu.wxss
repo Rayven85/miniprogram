@@ -1,1 +1,118 @@
-/* pages/menu/menu.wxss */
+.page {
+  height: 100vh;
+  display: flex;
+  background: #f6f6f6;
+}
+
+.left {
+  width: 180rpx;
+  background: #ffffff;
+  border-right: 1rpx solid #eee;
+}
+
+.cat {
+  padding: 26rpx 20rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.cat.active {
+  background: #fff7db;
+  color: #111;
+  font-weight: 600;
+  border-left: 8rpx solid #ffcd4e;
+}
+
+.right {
+  flex: 1;
+}
+
+.right-inner {
+  padding: 20rpx;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #111;
+}
+
+.sub {
+  font-size: 24rpx;
+  color: #777;
+}
+
+.loading,
+.empty {
+  padding: 40rpx 0;
+  text-align: center;
+  color: #888;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18rpx;
+  overflow: hidden;
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.06);
+}
+
+.img {
+  width: 100%;
+  height: 240rpx;
+  background: #eee;
+}
+
+.info {
+  padding: 18rpx 18rpx 20rpx;
+}
+
+.name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #111;
+}
+
+.desc {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.row {
+  margin-top: 12rpx;
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  flex-wrap: wrap;
+}
+
+.price {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #111;
+}
+
+.tag {
+  font-size: 20rpx;
+  padding: 4rpx 10rpx;
+  border-radius: 999rpx;
+  background: #f1f1f1;
+  color: #555;
+}
+
+.footer-space {
+  height: 40rpx;
+}

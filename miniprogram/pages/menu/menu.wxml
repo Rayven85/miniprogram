@@ -1,5 +1,52 @@
-<!--pages/menu/menu.wxml-->
-<view style="padding: 24rpx;">
-  <view style="font-size: 34rpx; font-weight: 600;">菜单页</view>
-  <view style="margin-top: 16rpx;">如果你能看到这行字，说明页面渲染正常 ✅</view>
+<view class="page">
+  <!-- 左侧分类 -->
+  <scroll-view class="left" scroll-y="true">
+    <view
+      wx:for="{{categories}}"
+      wx:key="_id"
+      class="cat {{selectedCatId === item._id ? 'active' : ''}}"
+      data-id="{{item._id}}"
+      bindtap="onSelectCategory"
+    >
+      {{item.name}}
+    </view>
+  </scroll-view>
+
+  <!-- 右侧菜品列表 -->
+  <scroll-view class="right" scroll-y="true" refresher-enabled="{{false}}">
+    <view class="right-inner">
+      <view class="header">
+        <text class="title">{{selectedCatName || '菜单'}}</text>
+        <text class="sub">共 {{products.length}} 个</text>
+      </view>
+
+      <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+      <view wx:if="{{!loading && products.length === 0}}" class="empty">
+        这个分类还没有菜品
+      </view>
+
+      <view class="grid">
+        <view
+          wx:for="{{products}}"
+          wx:key="_id"
+          class="card"
+          data-id="{{item._id}}"
+          bindtap="goItem"
+        >
+          <image class="img" mode="aspectFill" src="{{item.imageUrl}}" />
+          <view class="info">
+            <view class="name">{{item.name}}</view>
+            <view class="desc" wx:if="{{item.description}}">{{item.description}}</view>
+            <view class="row">
+              <text class="price">$ {{item.priceYuan}}</text>
+              <text class="tag" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="footer-space"></view>
+    </view>
+  </scroll-view>
 </view>
