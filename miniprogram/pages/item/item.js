@@ -245,36 +245,51 @@ Page({
   // ====== 加入购物车 ======
   addToCartTap() {
     const { product, tpl, form } = this.data;
-
-    // 校验 qty
-    const c = validateQty(form.qty, 1, tpl?.rules?.maxQtyPerItem || 99);
-    if (!c.ok) return toast(c.msg);
-
-    // 组装 options（存 code，不存随便写的文字）
+  
+    // qty 校验
+    const maxQty = tpl?.rules?.maxQtyPerItem || 99;
+    const qty = Math.max(1, Math.min(maxQty, Math.floor(Number(form.qty) || 1)));
+  
+    // ===== 计算 addonFee（分）+ 生成中文 label =====
+    const addonMap = new Map((tpl.addons || []).map(a => [a.code, a]));
+    const noIngMap = new Map((tpl.noIngredients || []).map(a => [a.code, a]));
+    const remarkMap = new Map((tpl.remarks || []).map(a => [a.code, a]));
+  
+    const addonFee = (form.addons || []).reduce((sum, code) => {
+      const a = addonMap.get(code);
+      return sum + (a?.price || 0);
+    }, 0);
+  
     const options = normalizeOptions({
       spice: form.spice,
       cutlery: form.cutlery, // YES/NO
       addons: form.addons,
       noIngredients: form.noIngredients,
-      remark: "", // 你 storage 的结构里有 remark 字段，我们这里不用自由文本
+      remarkCodes: form.remarks || [],
+      templateId: product.optionsTemplateId || "",
     });
-
-    // 为了订单“快照”更完整，购物车里先存 unitPrice（基础价，不含 addons）
+  
+    // 中文展示（给购物车页用）
+    const optionsLabel = {
+      spice: form.spice || "",
+      cutlery: form.cutlery === "NO" ? "不要餐具" : "要餐具",
+      addons: (form.addons || []).map(code => addonMap.get(code)?.name).filter(Boolean),
+      noIngredients: (form.noIngredients || []).map(code => noIngMap.get(code)?.name).filter(Boolean),
+      remarks: (form.remarks || []).map(code => remarkMap.get(code)?.name).filter(Boolean),
+    };
+  
     addToCart({
       productId: product._id,
       name: product.name,
-      unitPrice: product.price, // 分
-      qty: form.qty,
+      unitPrice: product.price,     // 分（基础价）
+      addonFee,                     // 分（加购总额）
+      qty,
       imageUrl: product.imageUrl,
-      options: {
-        ...options,
-        // 备注我们用 codes 数组
-        remarkCodes: form.remarks || [],
-        templateId: product.optionTemplateId || "",
-      },
+      options,
+      optionsLabel,
     });
-
+  
     toastSuccess("已加入购物车");
     wx.navigateBack();
-  },
+  }  
 });

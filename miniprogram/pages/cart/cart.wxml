@@ -1,2 +1,51 @@
-<!--pages/cart/cart.wxml-->
-<text>pages/cart/cart.wxml</text>
+<view class="page">
+  <view wx:if="{{isEmpty}}" class="empty">
+    <view class="empty-title">购物车是空的</view>
+    <view class="empty-sub">去菜单页挑选你想吃的吧～</view>
+    <button class="empty-btn" bindtap="goMenu">去点餐</button>
+  </view>
+
+  <view wx:else>
+    <view class="header">
+      <view class="count">共 {{count}} 项</view>
+      <view class="clear" bindtap="onClear">清空</view>
+    </view>
+
+    <view class="list">
+      <view class="item" wx:for="{{items}}" wx:key="key">
+        <image class="thumb" mode="aspectFill" src="{{item.imageUrl}}" />
+
+        <view class="info">
+          <view class="row1">
+            <view class="name">{{item.name}}</view>
+            <view class="lineTotal">$ {{item.lineTotalYuan}}</view>
+          </view>
+
+          <view class="opts" wx:if="{{item.optionsText}}">
+            {{item.optionsText}}
+          </view>
+
+          <view class="row2">
+            <view class="unit">$ {{item.unitYuan}} / 份</view>
+
+            <view class="qty">
+              <button class="qty-btn" size="mini" data-key="{{item.key}}" bindtap="decQty">-</button>
+              <text class="qty-num">{{item.qty}}</text>
+              <button class="qty-btn" size="mini" data-key="{{item.key}}" bindtap="incQty">+</button>
+            </view>
+
+            <view class="remove" data-key="{{item.key}}" bindtap="removeOne">删除</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom">
+      <view class="sum">
+        <view class="sum-label">合计</view>
+        <view class="sum-val">$ {{totalYuan}}</view>
+      </view>
+      <button class="checkout" bindtap="goCheckout">去结算</button>
+    </view>
+  </view>
+</view>

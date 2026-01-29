@@ -49,4 +49,5 @@
       <view class="footer-space"></view>
     </view>
   </scroll-view>
+  <view class="fab" bindtap="goCart">🛒</view>
 </view>

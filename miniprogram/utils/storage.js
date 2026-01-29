@@ -35,8 +35,7 @@ export function normalizeOptions(options) {
   const o = options && typeof options === "object" ? options : {};
   const norm = {
     spice: String(o.spice ?? ""),
-    cutlery: String(o.cutlery ?? ""), // "要" / "不要"
-    remark: String(o.remark ?? ""),
+    cutlery: String(o.cutlery ?? ""), // YES/NO
     remarkCodes: Array.isArray(o.remarkCodes) ? [...o.remarkCodes].map(String).sort() : [],
     templateId: String(o.templateId ?? ""),
     addons: Array.isArray(o.addons) ? [...o.addons].map(String).sort() : [],
@@ -44,6 +43,7 @@ export function normalizeOptions(options) {
   };
   return norm;
 }
+
 
 // 添加到购物车：如果同 key 已存在，就 qty 累加
 export function addToCart(payload) {
@@ -53,16 +53,19 @@ export function addToCart(payload) {
   const key = buildCartKey(payload.productId, normOpt);
 
   const idx = cart.items.findIndex(it => it.key === key);
+  const addQty = Math.max(1, Math.floor(Number(payload.qty) || 1));
   if (idx >= 0) {
-    cart.items[idx].qty += Number(payload.qty) || 1;
+    cart.items[idx].qty += addQty;
   } else {
     cart.items.push({
       key,
       productId: payload.productId,
       name: payload.name,
       unitPrice: payload.unitPrice, // 分
+      addonFee: Number(payload.addonFee || 0), // 分
+      optionsLabel: payload.optionsLabel || null,       // 中文展示用（对象）
       imageUrl: payload.imageUrl || "",
-      qty: Number(payload.qty) || 1,
+      qty: addQty,
       options: normOpt,
       createdAt: Date.now(),
     });
@@ -90,3 +93,12 @@ export function removeCartItem(key) {
   cart.items = cart.items.filter(it => it.key !== key);
   return setCart(cart);
 }
+
+export function getCartItems() {
+  return getCart().items || [];
+}
+
+export function setCartItems(items) {
+  return setCart({ items: Array.isArray(items) ? items : [] });
+}
+

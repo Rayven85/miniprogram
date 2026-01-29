@@ -1,1 +1,111 @@
-/* pages/cart/cart.wxss */
+.page {
+  min-height: 100vh;
+  background: #f6f6f6;
+  padding-bottom: 140rpx;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 18rpx;
+  color: #333;
+}
+
+.count { font-size: 26rpx; }
+.clear { font-size: 26rpx; color: #d14; }
+
+.list { padding: 0 18rpx; }
+
+.item {
+  display: flex;
+  gap: 16rpx;
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 16rpx;
+  margin-bottom: 14rpx;
+  box-shadow: 0 6rpx 18rpx rgba(0,0,0,0.06);
+}
+
+.thumb {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 14rpx;
+  background: #eee;
+}
+
+.info { flex: 1; }
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  gap: 12rpx;
+  align-items: baseline;
+}
+
+.name { font-size: 30rpx; font-weight: 800; color: #111; }
+.lineTotal { font-size: 30rpx; font-weight: 900; color: #111; }
+
+.opts {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.4;
+}
+
+.row2 {
+  margin-top: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10rpx;
+}
+
+.unit { font-size: 24rpx; color: #888; }
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.qty-btn { width: 60rpx; height: 52rpx; line-height: 52rpx; }
+.qty-num { width: 50rpx; text-align: center; font-size: 28rpx; font-weight: 800; }
+
+.remove { font-size: 24rpx; color: #d14; }
+
+.bottom {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  padding: 18rpx;
+  background: rgba(255,255,255,0.96);
+  border-top: 1rpx solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14rpx;
+}
+
+.sum { display: flex; align-items: baseline; gap: 10rpx; }
+.sum-label { font-size: 26rpx; color: #333; }
+.sum-val { font-size: 34rpx; font-weight: 900; color: #111; }
+
+.checkout {
+  background: #ffcd4e;
+  font-weight: 900;
+  border-radius: 999rpx;
+  flex: 1;
+}
+.empty {
+  padding-top: 200rpx;
+  text-align: center;
+}
+.empty-title { font-size: 34rpx; font-weight: 900; color: #111; }
+.empty-sub { margin-top: 12rpx; font-size: 26rpx; color: #666; }
+.empty-btn {
+  margin-top: 28rpx;
+  background: #ffcd4e;
+  border-radius: 999rpx;
+  width: 280rpx;
+  font-weight: 900;
+}

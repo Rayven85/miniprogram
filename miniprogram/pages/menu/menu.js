@@ -105,4 +105,8 @@ Page({
       url: `/pages/item/item?productId=${productId}`,
     });
   },
+
+  goCart() {
+    wx.navigateTo({ url: "/pages/cart/cart" });
+  }  
 });
