@@ -37,6 +37,8 @@ export function normalizeOptions(options) {
     spice: String(o.spice ?? ""),
     cutlery: String(o.cutlery ?? ""), // "要" / "不要"
     remark: String(o.remark ?? ""),
+    remarkCodes: Array.isArray(o.remarkCodes) ? [...o.remarkCodes].map(String).sort() : [],
+    templateId: String(o.templateId ?? ""),
     addons: Array.isArray(o.addons) ? [...o.addons].map(String).sort() : [],
     noIngredients: Array.isArray(o.noIngredients) ? [...o.noIngredients].map(String).sort() : [],
   };
