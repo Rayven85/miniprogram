@@ -1,4 +1,4 @@
-import { getCart, setCart, clearCart, removeCartByKey, updateCartQtyByKey } from "../../utils/storage";
+import { getCart, clearCart, removeCartItem, updateCartItemQty } from "../../utils/storage";
 import { fenToYuan, calcLineTotal, sumFen } from "../../utils/money";
 import { toast, toastSuccess } from "../../utils/ui";
 
@@ -16,9 +16,12 @@ Page({
   },
 
   refresh() {
-    const raw = getCart() || [];
-    const items = raw.map((x) => this.enhanceCartItem(x));
+    const cart = getCart();
+    const rawItems = cart.items || [];
+
+    const items = rawItems.map((x) => this.enhanceCartItem(x));
     const totalFee = sumFen(items.map((x) => x.lineTotalFee));
+
     this.setData({
       items,
       count: items.reduce((s, x) => s + (x.qty || 0), 0),
@@ -28,14 +31,10 @@ Page({
     });
   },
 
-  // 把 cart item 变成可直接展示的 UI 字段
   enhanceCartItem(x) {
     const qty = Math.max(1, Number(x.qty || 1));
-    const unitPrice = Number(x.unitPrice || 0); // 分（基础价）
-    const options = x.options || {};
-    const addonFee = Number(x.addonFee || 0); // 如果你 addToCart 已经算过就用；否则这里可以不算
-
-    // 如果你没存 addonFee，我们就保守：用 unitPrice 直接算（结算时再用云函数重算）
+    const unitPrice = Number(x.unitPrice || 0); // 分
+    const addonFee = Number(x.addonFee || 0);   // 分（你后面会存）
     const unitFee = unitPrice + addonFee;
     const lineTotalFee = calcLineTotal(unitFee, qty);
 
@@ -45,9 +44,9 @@ Page({
       unitYuan: fenToYuan(unitFee),
       lineTotalFee,
       lineTotalYuan: fenToYuan(lineTotalFee),
-      optionsText: buildOptionsText(options),
+      optionsText: buildOptionsText(x),
       imageUrl: x.imageUrl || "",
-      key: x.key || x._id || `${x.productId}_${Math.random()}`,
+      key: x.key, // 你 storage 已经保证有 key
     };
   },
 
@@ -56,8 +55,7 @@ Page({
     const item = this.data.items.find((x) => x.key === key);
     if (!item) return;
 
-    const nextQty = item.qty + 1;
-    updateCartQtyByKey(key, nextQty);
+    updateCartItemQty(key, item.qty + 1);
     this.refresh();
   },
 
@@ -66,14 +64,13 @@ Page({
     const item = this.data.items.find((x) => x.key === key);
     if (!item) return;
 
-    const nextQty = Math.max(1, item.qty - 1);
-    updateCartQtyByKey(key, nextQty);
+    updateCartItemQty(key, Math.max(1, item.qty - 1));
     this.refresh();
   },
 
   removeOne(e) {
     const key = e.currentTarget.dataset.key;
-    removeCartByKey(key);
+    removeCartItem(key); // ✅
     toastSuccess("已删除");
     this.refresh();
   },
@@ -94,7 +91,12 @@ Page({
   },
 
   goMenu() {
-    wx.switchTab ? wx.switchTab({ url: "/pages/menu/menu" }) : wx.navigateTo({ url: "/pages/menu/menu" });
+    wx.switchTab({
+      url: "/pages/menu/menu",
+      fail: () => {
+        wx.navigateTo({ url: "/pages/menu/menu" });
+      },
+    });
   },
 
   goCheckout() {
@@ -103,17 +105,27 @@ Page({
   },
 });
 
-// 把选项转成一行可读文本（WXML 不做拼接）
-function buildOptionsText(options) {
-  const o = options || {};
+function buildOptionsText(item) {
+  const o = item.options || {};
+  const l = item.optionsLabel || null;
   const parts = [];
 
-  if (o.spice) parts.push(`辣度：${o.spice}`);
-  if (o.cutlery) parts.push(`餐具：${o.cutlery === "NO" ? "不要" : "要"}`);
+  const spice = l?.spice || o.spice;
+  if (spice) parts.push(`辣度：${spice}`);
 
-  if (Array.isArray(o.addons) && o.addons.length) parts.push(`加购：${o.addons.join("、")}`);
-  if (Array.isArray(o.noIngredients) && o.noIngredients.length) parts.push(`不要：${o.noIngredients.join("、")}`);
-  if (Array.isArray(o.remarkCodes) && o.remarkCodes.length) parts.push(`备注：${o.remarkCodes.join("、")}`);
+  const cutleryLabel =
+    l?.cutlery ||
+    (o.cutlery ? `餐具：${o.cutlery === "NO" ? "不要餐具" : "要餐具"}` : "");
+  if (cutleryLabel) parts.push(cutleryLabel.startsWith("餐具") ? cutleryLabel : `餐具：${cutleryLabel}`);
+
+  const addons = l?.addons || o.addons;
+  if (Array.isArray(addons) && addons.length) parts.push(`加购：${addons.join("、")}`);
+
+  const noIng = l?.noIngredients || o.noIngredients;
+  if (Array.isArray(noIng) && noIng.length) parts.push(`不要：${noIng.join("、")}`);
+
+  const remarks = l?.remarks || o.remarkCodes;
+  if (Array.isArray(remarks) && remarks.length) parts.push(`备注：${remarks.join("、")}`);
 
   return parts.join("；");
 }

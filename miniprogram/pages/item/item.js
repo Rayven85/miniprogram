@@ -290,6 +290,5 @@ Page({
     });
   
     toastSuccess("已加入购物车");
-    wx.navigateBack();
   }  
 });
